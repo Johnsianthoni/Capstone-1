@@ -1,0 +1,80 @@
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
+from Test_Data import data
+from Test_Locators import locators
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+
+
+class Johnsi:
+    def __init__(self, url):
+        self.url = url
+        self.driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
+        self.driver.maximize_window()
+        self.driver.get(self.url)
+        self.driver.implicitly_wait(10)
+   
+    def login(self):
+        self.driver.find_element(by=By.NAME, value=locators.Locators().username_input_box).send_keys(data.Data().username)
+        self.driver.find_element(by=By.NAME, value=locators.Locators().password_input_box).send_keys(data.Data().password)
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().submit_button).click()
+        self.driver.implicitly_wait(10)
+
+        #Navigate to the Pim Module
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().Pim_module_button).click()
+
+        #Assuming the "Add" button is identified with ID 'add_employee_button'.
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().click_button).click()
+        self.driver.implicitly_wait(5)
+
+        #Fill the employee details
+        self.driver.find_element(by=By.NAME, value=locators.Locators().First_Name_input_box).send_keys(data.Data().firstName)
+        self.driver.find_element(by=By.NAME, value=locators.Locators().Middle_Name_input_box).send_keys(data.Data().middleName)
+        self.driver.find_element(by=By.NAME, value=locators.Locators().Last_Name_input_box).send_keys(data.Data().lastName)
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().Employee_id_input_box).click()
+        self.driver.implicitly_wait(5)
+
+        #save the employee details
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().save_button).click()
+        self.driver.implicitly_wait(5)
+        time.sleep(3)
+        #Employees details in xpath
+        
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_other_id).send_keys(data.Data().other_id)
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_driver_license).send_keys(data.Data().driver_license)
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_ssn_number).send_keys(data.Data().ssn_number)
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_sin_number).send_keys(data.Data().sin_number)
+
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_License_expiry_date).send_keys(data.Data().License_Exiry_date)
+        
+        Nationality_dropdown = self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_Nationality)
+        action = ActionChains(self.driver)
+        action.click(Nationality_dropdown)
+        action.perform()
+        self.driver.find_element(by=By.XPATH, value=data.Data().Nationality).click()
+
+        Marital_Status_dropdown = self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_Marital_status)
+        action = ActionChains(self.driver)
+        action.click(Marital_Status_dropdown)
+        action.perform()
+        self.driver.find_element(by=By.XPATH, value=data.Data().Marital_status).click()
+
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_date_of_birth).send_keys(data.Data().Date_of_birth)
+
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_of_radio).click()
+
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_Military_service).send_keys(data.Data().Military_service)
+
+        self.driver.find_element(by=By.XPATH, value=locators.Locators().xpath_of_save_button).click()
+
+        logout_button = self.driver.find_element(by=By.XPATH, value=locators.Locators().logout_1)
+        action = ActionChains(self.driver)
+        action.click(on_element=logout_button).perform()
+        self.driver.find_element(by=By.LINK_TEXT, value='Logout').click()
+
+        
+
+johnsi = Johnsi(data.Data().url)
+johnsi.login()
